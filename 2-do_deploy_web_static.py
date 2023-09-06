@@ -1,33 +1,17 @@
 #!/usr/bin/python3
 """Fabric script that distributes an archive to your web servers,
 using the function do_deploy."""
-from fabric.api import run, put, env, local
-from datetime import datetime
+from fabric.api import run, put, env
 import os
 
 env.hosts = ['34.227.89.39', '35.174.184.2']
 
 
-def do_pack():
-    """Function to generate a .tgz archive from web_static folder."""
-    local("mkdir -p versions")
-    date = datetime.now().strftime("%Y%m%d%H%M%S")
-    file = "versions/web_static_{}.tgz".format(date)
-    print("Packing web_static to {}".format(file))
-    try:
-        local("tar -cvzf {} web_static".format(file))
-        print("web_static packed: {} -> {}Bytes".format(file,
-                                                        os.path.getsize(file)))
-        return file
-    except Exception:
-        return None
-
-
 def do_deploy(archive_path):
     """Function to distribute an archive to web servers."""
-    if not os.path.exists(archive_path):
-        return False
     try:
+        if not os.path.exists(archive_path):
+            return False
         arch_name = os.path.basename(archive_path)
         arch_no_ext = os.path.splitext(arch_name)[0]
         put(archive_path, "/tmp/")
