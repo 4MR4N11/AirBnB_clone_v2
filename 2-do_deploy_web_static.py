@@ -18,18 +18,17 @@ def do_deploy(archive_path):
         arch_name = os.path.basename(archive_path)
         arch_no_ext = os.path.splitext(arch_name)[0]
         put(archive_path, "/tmp/")
-        run("mkdir -p /data/web_static/releases/{}/".format(arch_no_ext))
+        run("mkdir -p /data/web_static/releases/{}".format(arch_no_ext))
         run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
             .format(arch_name, arch_no_ext))
         run("rm /tmp/{}".format(arch_name))
-        run("mv /data/web_static/releases/{}/web_static/* \
- /data/web_static/releases/{}/".format(arch_no_ext, arch_no_ext))
+        run(("mv /data/web_static/releases/{}/web_static/* " +
+            "/data/web_static/releases/{}/").format(arch_no_ext, arch_no_ext))
         run("rm -rf /data/web_static/releases/{}/web_static"
             .format(arch_no_ext))
         run("rm -rf /data/web_static/current")
-        run("ln -s /data/web_static/releases/{}/ \
- /data/web_static/current".format(arch_no_ext))
-        print("New version deployed!")
+        run(("ln -s /data/web_static/releases/{}/ " +
+            "/data/web_static/current").format(arch_no_ext))
         return True
     except Exception:
         return False
