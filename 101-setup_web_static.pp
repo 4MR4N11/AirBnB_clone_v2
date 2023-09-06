@@ -1,60 +1,47 @@
 # this puppet manifest configures a web server to serve a static page
-class web_server_setup {
+exec { 'apt-get update':
+  command => '/bin/apt-get update'
+}
 
-  package { 'update':
-    ensure => 'latest',
-  }
+package { 'nginx':
+  ensure => 'installed',
+}
 
-  package { 'nginx':
-    ensure => 'installed',
-  }
+exec { 'create directory':
+  command => '/bin/mkdir -p /data/web_static/releases/test/',
+}
 
-  file { [
-    '/data/web_static/releases/test',
-    '/data/web_static/shared',
-  ]:
-    ensure => 'directory',
-  }
+exec { 'create directory':
+  command => '/bin/mkdir -p /data/web_static/shared/',
+}
 
-  file { '/data/web_static/releases/test/index.html':
-    content => '<html>
+exec { 'create index.html':
+  command => '/bin/echo "<html>
   <head>
   </head>
   <body>
     Hello World!
   </body>
-</html>',
-    owner   => 'ubuntu',
-    group   => 'ubuntu',
-    mode    => '0644',
-  }
-
-  file { '/data/web_static/current':
-    ensure  => 'absent',
-    require => File['/data/web_static/releases/test/index.html'],
-  }
-
-  file { '/data/web_static/current':
-    ensure  => 'link',
-    target  => '/data/web_static/releases/test',
-    owner   => 'ubuntu',
-    group   => 'ubuntu',
-  }
-
-  file_line { 'configure_nginx':
-    path    => '/etc/nginx/sites-available/default',
-    line    => 'location /hbnb_static/ { alias /data/web_static/current/; }',
-    match   => '^ *listen 80 default_server;',
-    ensure  => present,
-    require => Package['nginx'],
-    notify  => Service['nginx'],
-  }
-
-  service { 'nginx':
-    ensure     => 'running',
-    enable     => true,
-    subscribe  => File_line['configure_nginx'],
-  }
+</html>" > /data/web_static/releases/test/index.html',
 }
 
-include web_server_setup
+file { '/data/web_static/current':
+  ensure  => 'absent',
+  onlyif  => 'test -L /data/web_static/current',
+}
+
+exec { 'create symlink':
+  command => '/bin/ln -s /data/web_static/releases/test/ /data/web_static/current',
+}
+
+exec { 'change ownership':
+  command => '/bin/chown -R ubuntu:ubuntu /data/',
+}
+
+exec { 'update nginx config':
+  command => '/bin/sed -i "/listen 80 default_server;/a location /hbnb_static/ { alias /data/web_static/current/;}" /etc/nginx/sites-available/default',
+}
+
+exec { 'restart nginx':
+  command => '/bin/service nginx restart',
+}
