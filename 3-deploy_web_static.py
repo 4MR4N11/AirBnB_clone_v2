@@ -9,8 +9,6 @@ env.hosts = [
     '34.227.89.39',
     '35.174.184.2'
 ]
-env.user = 'ubuntu'
-env.key_filename = '/home/amrani/.ssh/school'
 
 
 @runs_once
