@@ -7,11 +7,11 @@ package { 'nginx':
   ensure => 'installed',
 }
 
-exec { 'create directory':
+exec { 'create directory1':
   command => '/bin/mkdir -p /data/web_static/releases/test/',
 }
 
-exec { 'create directory':
+exec { 'create directory2':
   command => '/bin/mkdir -p /data/web_static/shared/',
 }
 
@@ -25,9 +25,9 @@ exec { 'create index.html':
 </html>" > /data/web_static/releases/test/index.html',
 }
 
-file { '/data/web_static/current':
-  ensure  => 'absent',
-  onlyif  => 'test -L /data/web_static/current',
+exec { 'remove_web_static_current':
+  command => '/bin/rm -rf /data/web_static/current',
+  onlyif  => '/bin/test -L /data/web_static/current',
 }
 
 exec { 'create symlink':
@@ -43,5 +43,5 @@ exec { 'update nginx config':
 }
 
 exec { 'restart nginx':
-  command => '/bin/service nginx restart',
+  command => '/sbin/service nginx restart',
 }
