@@ -33,5 +33,4 @@ class State(BaseModel, Base):
             for _id, city in models.storage.all(City).items():
                 if self.id == city.state_id:
                     cities.append(city)
-
             return cities
