@@ -10,11 +10,14 @@ app = Flask(__name__)
 
 @app.teardown_appcontext
 def close_storage(exception):
+    """ Closes the storage"""
     storage.close()
 
 
 @app.route("/states_list", strict_slashes=False)
 def list_states():
+    """ Returns a string at the /states_list route with a variable as an
+    int and renders an html template """
     data = storage.all(State).values()
     return render_template('7-states_list.html', states=data)
 
