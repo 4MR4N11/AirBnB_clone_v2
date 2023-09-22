@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/python3
 """a module containing DBStorage class to manage database storage"""
 from models.base_model import BaseModel, Base
 from models.user import User
@@ -97,5 +97,4 @@ class DBStorage:
 
     def close(self):
         """closes the Session"""
-        if self.__session:
-            self.__session.close()
+        self.__session.close()
