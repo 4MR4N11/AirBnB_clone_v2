@@ -15,7 +15,7 @@ def close_storage(exception):
 
 @app.route("/states_list", strict_slashes=False)
 def list_states():
-    data = storage.all(State)
+    data = storage.all(State).values()
     return render_template('7-states_list.html', data=data)
 
 
