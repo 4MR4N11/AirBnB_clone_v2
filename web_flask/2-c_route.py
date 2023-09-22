@@ -1,6 +1,8 @@
+#!/usr/bin/python3
+""" Flask web application """
 from flask import Flask
 from markupsafe import escape
-""" Flask web application"""
+
 app = Flask(__name__)
 
 
