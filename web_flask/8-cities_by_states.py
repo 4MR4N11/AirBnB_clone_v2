@@ -16,8 +16,7 @@ def close_storage(exception):
 
 @app.route("/cities_by_states", strict_slashes=False)
 def list_states():
-    """ Returns a string at the /states_list route with a variable as an
-    int and renders an html template """
+    """ Returns data from storage and renders an html template """
     data = storage.all(State).values()
     return render_template('8-cities_by_states.html', states=data)
 

@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """ Flask web application """
 from flask import Flask
+from flask import render_template
 from models import storage
 from models.state import State
-from flask import render_template
 
 app = Flask(__name__)
 
@@ -14,11 +14,23 @@ def close_storage(exception):
     storage.close()
 
 
-@app.route("/states_list", strict_slashes=False)
+@app.route("/states", strict_slashes=False)
 def list_states():
     """ Returns data from storage and renders an html template """
     data = storage.all(State).values()
     return render_template('7-states_list.html', states=data)
+
+
+@app.route("/states/<id>", strict_slashes=False)
+def show_state_by_id(id):
+    """ Returns data from storage and renders an html template """
+    data = storage.all(State).values()
+    state = None
+    for item in data:
+        if item.id == id:
+            state = item
+            break
+    return render_template('9-states.html', state=state)
 
 
 if __name__ == "__main__":
