@@ -51,7 +51,7 @@
 	border-radius: 4px;
 	visibility: hidden;
 	transform: translateX(-14%);
-	padding-top: 35px;
+	padding-top: 25px;
 	padding-bottom: 35px;
 	max-height: 300px;
 	overflow-y: scroll;
@@ -66,4 +66,15 @@ ul {
 .locations:hover .popover,
 .filters > .amenities:hover .popover{
 	visibility: visible;
+}
+::-webkit-scrollbar {
+	width: 0.2em;
+}
+  
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+  
+::-webkit-scrollbar-thumb {
+	background: #888;
 }
